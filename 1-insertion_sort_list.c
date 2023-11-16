@@ -11,26 +11,27 @@ void insertion_sort_list(listint_t **list)
 {
 	listint_t *ptr, *pt, *curent, *prev;
 
-	if (!list || !*list)
+	if (!list || !*list || !(*list)->next)
 		return;
 
-	for (ptr = *list; ptr->next; ptr = ptr->next)
+	for (ptr = (*list)->next; ptr; ptr = ptr->next)
 	{
-		pt = ptr->next;
-		if (pt->n < pt->prev->n)
-			ptr = ptr->prev;
+		pt = ptr;
 		while (pt->prev && pt->n < pt->prev->n)
 		{
 			curent = pt;
-			prev = pt->prev;
+			prev = pt->prev, prev->next = curent->next;
+
 			if (curent->next)
 				curent->next->prev = prev;
-			prev->next = curent->next, curent->next = prev;
-			if (prev->prev)
-				prev->prev->next = curent;
+
+			curent->next = prev, curent->prev = prev->prev;
+			prev->prev = curent;
+
+			if (curent->prev)
+				curent->prev->next = curent;
 			else
 				*list = curent;
-			curent->prev = prev->prev, prev->prev = curent;
 
 			print_list(*list);
 		}
