@@ -2,7 +2,7 @@
 
 
 /**
- * lomuto - Lomuto partition scheme.
+ * hoare - hoare partition scheme.
  *
  * @array: array to sort
  * @size: size of the array
@@ -11,25 +11,24 @@
  *
  * Return: the index of pivot point
  */
-int lomuto(int *array, size_t size, int start, int end)
+int hoare(int *array, size_t size, int start, int end)
 {
-	int pivot = array[end], i = start, j, tmp;
+	int pivot = array[end], i = start - 1, j = end + 1, tmp;
 
-	for (j = start; j < end; j++)
+	while (1)
 	{
-		if (array[j] < pivot)
-		{
-			tmp = array[i], array[i] = array[j];
-			array[j] = tmp, i++;
-			if (array[i - 1] != array[j])
-				print_array(array, size);
-		}
-	}
-	tmp = array[i], array[i] = array[end];
-	array[end] = tmp;
-	if (array[i] != tmp)
+		do
+			i++;
+		while (array[i] < pivot);
+		do
+			j--;
+		while (array[j] > pivot);
+		if (i >= j)
+			return (i);
+		tmp = array[i], array[i] = array[j];
+		array[j] = tmp;
 		print_array(array, size);
-	return (i);
+	}
 }
 
 
@@ -48,9 +47,9 @@ void quick(int *array, size_t size, int start, int end)
 
 	if (start >= end || start < 0)
 		return;
-	pivot = lomuto(array, size, start, end);
+	pivot = hoare(array, size, start, end);
 	quick(array, size, start, pivot - 1);
-	quick(array, size, pivot + 1, end);
+	quick(array, size, pivot, end);
 
 }
 
